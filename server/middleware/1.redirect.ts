@@ -5,12 +5,11 @@ import { parsePath, withQuery } from 'ufo'
 export default eventHandler(async (event) => {
   const { pathname: slug } = parsePath(event.path.replace(/^\/|\/$/g, '')) // remove leading and trailing slashes
   const { slugRegex, reserveSlug } = useAppConfig(event)
-  const { linkCacheTtl, redirectWithQuery, caseSensitive } = useRuntimeConfig(event)
+  const { homeURL, linkCacheTtl, redirectWithQuery, caseSensitive } = useRuntimeConfig(event)
   const { cloudflare } = event.context
 
-  // Disable Sink marketing homepage: force redirect when visiting root only.
-  if (event.path === '/')
-    return sendRedirect(event, 'https://www.krossys.com/')
+  if (event.path === '/' && homeURL)
+    return sendRedirect(event, homeURL)
 
   if (slug && !reserveSlug.includes(slug) && slugRegex.test(slug) && cloudflare) {
     const { KV } = cloudflare.env
