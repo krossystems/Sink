@@ -9,8 +9,6 @@ export default defineWorkersConfig(({ mode }) => ({
       workers: {
         singleWorker: true,
         isolatedStorage: false,
-        // Ensure tests run fully locally (no Wrangler remote proxy / login required)
-        remoteBindings: false,
         wrangler: {
           configPath: './wrangler.jsonc',
         },
